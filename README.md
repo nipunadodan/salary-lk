@@ -1,8 +1,8 @@
-# SalaryLKR - Salary Calculator Application - Technical Documentation
+# SalaryLK - Salary Calculator Application - Technical Documentation
 
 ## Overview
 
-The SalaryLKR - Salary Calculator is a web application designed to help users calculate and visualize salary
+The SalaryLK - Salary Calculator is a web application designed to help users calculate and visualize salary
 information, including
 tax deductions, EPF contributions, and take-home pay. The application provides three main calculation modes:
 deductions, EPF contributions, and take-home pay. The application provides three main calculation modes:
