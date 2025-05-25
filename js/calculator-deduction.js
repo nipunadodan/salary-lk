@@ -3,10 +3,12 @@ const calculateFromDeductions = () => {
     const taxPercentInput = document.getElementById('taxPercent');
     const totalDeductionInput = document.getElementById('totalDeduction');
     const deductionResultsDiv = document.getElementById('deductionResults');
+    const shareButton = document.querySelector('[onclick="shareCalculator(\'deduction\')"]');
 
     // Hide results if both inputs are empty
     if (taxPercentInput.value === '' && totalDeductionInput.value === '') {
         deductionResultsDiv.style.display = 'none';
+        shareButton.classList.remove('visible');
         return;
     }
 
@@ -20,13 +22,14 @@ const calculateFromDeductions = () => {
 
     if (isNaN(targetPercentage) || targetPercentage <= 0 || targetPercentage >= 100) {
         handleInvalidInput(deductionResultsDiv);
+        shareButton.classList.remove('visible');
         return;
     }
 
     // Use the generic binary search function if available
     const findGrossForDeduction = (targetPercent, isTaxOnly) => {
         const calcPercentForGross = (gross) => {
-            const components = window.memoizedCalculateSalaryComponents 
+            const components = window.memoizedCalculateSalaryComponents
                 ? window.memoizedCalculateSalaryComponents(gross, 0)
                 : calculateSalaryComponents(gross, 0);
             return isTaxOnly ? components.taxPercentage : components.deductionPercentage;
@@ -43,7 +46,7 @@ const calculateFromDeductions = () => {
             if (grossEstimate !== null) {
                 const roundedGross = Math.ceil(grossEstimate / 10) * 10;
 
-                return window.memoizedCalculateSalaryComponents 
+                return window.memoizedCalculateSalaryComponents
                     ? window.memoizedCalculateSalaryComponents(roundedGross, 0)
                     : calculateSalaryComponents(roundedGross, 0);
             }
@@ -74,8 +77,11 @@ const calculateFromDeductions = () => {
     const result = findGrossForDeduction(targetPercentage, isTaxOnly);
     if (result) {
         updateCalculationResult(result, deductionResultsDiv);
+        deductionResultsDiv.style.display = 'block';
+        shareButton.classList.add('visible');
     } else {
         handleInvalidInput(deductionResultsDiv);
+        shareButton.classList.remove('visible');
     }
 };
 
@@ -84,16 +90,22 @@ const initDeductionCalculator = () => {
     const taxPercentInput = document.getElementById('taxPercent');
     const totalDeductionInput = document.getElementById('totalDeduction');
 
-    // Setup debounced handlers for the tax and total deduction inputs
-    const setupDeductionInput = (input, otherInput) => {
-        input?.addEventListener('input', debounce(() => {
-            if (input.value.trim()) {
-                otherInput.value = '';
-            }
-            calculateFromDeductions();
-        }, 200));
-    };
+    // Setup debounced calculations
+    [taxPercentInput, totalDeductionInput].forEach(input => {
+        input?.addEventListener('input', debounce(calculateFromDeductions, 800));
+    });
 
-    setupDeductionInput(taxPercentInput, totalDeductionInput);
-    setupDeductionInput(totalDeductionInput, taxPercentInput);
+    // Clear other input when one is being used
+    taxPercentInput?.addEventListener('input', () => {
+        if (taxPercentInput.value) {
+            totalDeductionInput.value = '';
+        }
+    });
+
+    totalDeductionInput?.addEventListener('input', () => {
+        if (totalDeductionInput.value) {
+            taxPercentInput.value = '';
+        }
+    });
 };
+
