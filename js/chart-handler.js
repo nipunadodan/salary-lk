@@ -23,7 +23,7 @@ const generateChartData = (start = 100000, end = 500000, step = 10000) => {
     // Only calculate points that will be visible on the chart
     for (let gross = start; gross <= end; gross += effectiveStep) {
         // Use memoized calculation if available
-        const components = window.memoizedCalculateSalaryComponents 
+        const components = window.memoizedCalculateSalaryComponents
             ? window.memoizedCalculateSalaryComponents(gross, 0)
             : calculateSalaryComponents(gross, 0);
 
@@ -31,7 +31,7 @@ const generateChartData = (start = 100000, end = 500000, step = 10000) => {
             gross: components.gross,
             net: components.net,
             deductionPercentage: components.deductionPercentage,
-            isMobile // Store the mobile state with the data point
+            isMobile, // Store the mobile state with the data point
         });
     }
     return data;
@@ -74,6 +74,13 @@ const createChartConfig = (data) => {
                 mode: 'index',
             },
             plugins: {
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'line',
+                        length: 40,
+                    },
+                },
                 tooltip: {
                     callbacks: {
                         label: function (context) {
