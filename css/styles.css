@@ -28,6 +28,43 @@
     --tax-breakdown-bg: #1e1e1e;
 }
 
+/* Flex utilities */
+.flex {
+    display: flex;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-start {
+    justify-content: flex-start;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.items-start {
+    align-items: flex-start;
+}
+
+.items-end {
+    align-items: flex-end;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -48,7 +85,6 @@ body {
 h2 {
     font-weight: 700;
     font-size: 1.75rem;
-    margin-bottom: 2rem;
     color: var(--heading-color);
 }
 
@@ -62,6 +98,14 @@ h3 {
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+header {
+    margin-bottom: 2rem;
+}
+
+.gap-1 {
+    gap: 1rem;
 }
 
 .chart-container {
