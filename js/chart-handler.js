@@ -9,21 +9,13 @@ const getChartColors = () => {
     };
 };
 
-// Chart-related functionality
-const generateChartData = (start = 100000, end = 500000, step = 10000) => {
-    // Use a larger step size for better performance
+// Chart data generation (pure function)
+const generateChartDataBase = (start = 100000, end = 500000, step = 10000, isMobile = window.innerWidth <= 768) => {
     const data = [];
-
-    // Pre-calculate window width check
-    const isMobile = window.innerWidth <= 768;
-
-    // Use a larger step size for mobile devices
     const effectiveStep = isMobile ? 20000 : 10000;
 
-    // Only calculate points that will be visible on the chart
     for (let gross = start; gross <= end; gross += effectiveStep) {
-        // Use memoized calculation if available
-        const components = window.memoizedCalculateSalaryComponents 
+        const components = window.memoizedCalculateSalaryComponents
             ? window.memoizedCalculateSalaryComponents(gross, 0)
             : calculateSalaryComponents(gross, 0);
 
@@ -31,11 +23,14 @@ const generateChartData = (start = 100000, end = 500000, step = 10000) => {
             gross: components.gross,
             net: components.net,
             deductionPercentage: components.deductionPercentage,
-            isMobile // Store the mobile state with the data point
+            isMobile,
         });
     }
     return data;
 };
+
+// Make base function available for memoization
+window.generateChartDataBase = generateChartDataBase;
 
 const createChartConfig = (data) => {
     const colors = getChartColors();
@@ -74,6 +69,13 @@ const createChartConfig = (data) => {
                 mode: 'index',
             },
             plugins: {
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'line',
+                        length: 40,
+                    },
+                },
                 tooltip: {
                     callbacks: {
                         label: function (context) {

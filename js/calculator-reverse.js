@@ -3,10 +3,12 @@ const reverseCalculate = () => {
     const netInput = document.getElementById('net');
     const allowanceInput = document.getElementById('reverseAllowance');
     const reverseResultsDiv = document.getElementById('reverseResults');
+    const shareButton = document.querySelector('[onclick="shareCalculator(\'net\')"]');
 
     // Hide results if both inputs are empty
     if (netInput.value === '' && allowanceInput.value === '') {
         reverseResultsDiv.style.display = 'none';
+        shareButton.classList.remove('visible');
         return;
     }
 
@@ -15,6 +17,7 @@ const reverseCalculate = () => {
 
     if (isNaN(desiredNet) || desiredNet <= 0) {
         handleInvalidInput(reverseResultsDiv);
+        shareButton.classList.remove('visible');
         return;
     }
 
@@ -22,7 +25,7 @@ const reverseCalculate = () => {
     const findGrossForNet = (targetNet, allowance) => {
         const calcNetForGross = (gross) => {
             const basicSalary = Math.max(gross - allowance, 0);
-            const components = window.memoizedCalculateSalaryComponents 
+            const components = window.memoizedCalculateSalaryComponents
                 ? window.memoizedCalculateSalaryComponents(basicSalary, allowance)
                 : calculateSalaryComponents(basicSalary, allowance);
             return components.net;
@@ -40,7 +43,7 @@ const reverseCalculate = () => {
                 const basicSalary = Math.max(grossEstimate - allowance, 0);
                 const roundedBasic = Math.ceil(basicSalary / 10) * 10;
 
-                return window.memoizedCalculateSalaryComponents 
+                return window.memoizedCalculateSalaryComponents
                     ? window.memoizedCalculateSalaryComponents(roundedBasic, allowance)
                     : calculateSalaryComponents(roundedBasic, allowance);
             }
@@ -72,8 +75,11 @@ const reverseCalculate = () => {
     const result = findGrossForNet(desiredNet, allowance);
     if (result) {
         updateCalculationResult(result, reverseResultsDiv);
+        reverseResultsDiv.style.display = 'block';
+        shareButton.classList.add('visible');
     } else {
         handleInvalidInput(reverseResultsDiv);
+        shareButton.classList.remove('visible');
     }
 };
 

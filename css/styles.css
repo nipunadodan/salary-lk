@@ -28,6 +28,43 @@
     --tax-breakdown-bg: #1e1e1e;
 }
 
+/* Flex utilities */
+.flex {
+    display: flex;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-start {
+    justify-content: flex-start;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.items-start {
+    align-items: flex-start;
+}
+
+.items-end {
+    align-items: flex-end;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -48,7 +85,6 @@ body {
 h2 {
     font-weight: 700;
     font-size: 1.75rem;
-    margin-bottom: 2rem;
     color: var(--heading-color);
 }
 
@@ -62,6 +98,14 @@ h3 {
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+header {
+    margin-bottom: 2rem;
+}
+
+.gap-1 {
+    gap: 1rem;
 }
 
 .chart-container {
@@ -153,33 +197,52 @@ button:hover {
 }
 
 .share-button {
-    width: 36px;
-    height: 36px;
-    padding: 6px;
-    border-radius: 50%;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    cursor: pointer;
-    display: flex;
+    display: none;
+}
+
+.share-action {
+    display: none; /* Hidden by default */
     align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    width: fit-content;
+    align-self: flex-start;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.share-button .material-icons {
-    font-size: 18px;
-    width: auto;
-    height: auto;
+.share-action.visible {
+    display: flex; /* Show when has visible class */
+}
+
+.share-action:hover {
+    background-color: var(--tax-breakdown-bg);
+}
+
+.share-action .material-icons,
+.share-action span:not(.material-icons) {
+    transition: color 0.2s ease;
+}
+
+.share-action .material-icons {
+    font-size: 16px;
+    width: 20px;
+    height: 20px;
     background: none;
-    color: var(--text-color);
+    color: var(--text-secondary);
 }
 
-.share-button:hover {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
+.share-action.copied {
+    background-color: var(--primary-color);
+    color: white;
 }
 
-.share-button:hover .material-icons {
+.share-action.copied .material-icons,
+.share-action.copied span:not(.material-icons) {
     color: white;
 }
 
@@ -211,7 +274,7 @@ button:hover {
 .icon-text {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .material-icons {
@@ -224,6 +287,11 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.calculator-header .icon-text .material-icons {
+    flex-shrink: 0;
+    min-width: 42px;
 }
 
 .result-line {

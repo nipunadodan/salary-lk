@@ -32,22 +32,23 @@ const shareCalculator = (type) => {
     if (params.toString()) {
         const shareableUrl = `${url.toString()}?${params.toString()}`;
         navigator.clipboard.writeText(shareableUrl).then(() => {
-            const button = document.querySelector(`[onclick="shareCalculator('${type}')"]`);
-            const icon = button.querySelector('.material-icons');
-            const originalText = icon.textContent;
+            const shareAction = document.querySelector(`[onclick="shareCalculator('${type}')"]`);
+            const icon = shareAction.querySelector('.material-icons');
+            const text = shareAction.querySelector('span:not(.material-icons)');
+
+            const originalIcon = icon.textContent;
+            const originalText = text.textContent;
 
             // Show feedback
             icon.textContent = 'check';
-            button.style.background = 'var(--primary-color)';
-            button.style.borderColor = 'var(--primary-color)';
-            icon.style.color = 'white';
+            text.textContent = 'Copied';
+            shareAction.classList.add('copied');
 
             // Reset after 2 seconds
             setTimeout(() => {
-                icon.textContent = originalText;
-                button.style.background = '';
-                button.style.borderColor = '';
-                icon.style.color = '';
+                icon.textContent = originalIcon;
+                text.textContent = originalText;
+                shareAction.classList.remove('copied');
             }, 2000);
         });
     }
@@ -84,3 +85,4 @@ const parseQueryParams = () => {
         }
     });
 };
+

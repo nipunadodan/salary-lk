@@ -12,12 +12,15 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<div class="theme-toggle-container">
-    <h2>SalaryLK: Salary Calculator</h2>
+<header class="theme-toggle-container items-center">
+    <div class="flex justify-between items-center gap-1">
+        <img src="salarylk_favicon.svg" alt="logo" class="logo" width="40px" />
+        <h2>SalaryLK: Salary Calculator</h2>
+    </div>
     <div class="">
         <span class="material-icons cursor-pointer theme-toggle-button" aria-label="Toggle dark mode">dark_mode</span>
     </div>
-</div>
+</header>
 <div class="chart-container">
     <canvas id="salaryChart"></canvas>
 </div>
@@ -26,9 +29,6 @@
     <div class="calculator">
         <div class="calculator-header">
             <h3 class="icon-text"><span class="material-icons">calculate</span>Calculate Take-Home Salary</h3>
-            <button class="share-button" onclick="shareCalculator('basic')" aria-label="Share calculator">
-                <span class="material-icons">share</span>
-            </button>
         </div>
         <label for="basic">Basic Salary (LKR)</label>
         <input type="number" id="basic" placeholder="100,000" />
@@ -104,14 +104,15 @@
                 </div>
             </div>
         </div>
+        <div class="share-action" onclick="shareCalculator('basic')">
+            <span class="material-icons">share</span>
+            <span>Share</span>
+        </div>
     </div>
 
     <div class="calculator">
         <div class="calculator-header">
             <h3 class="icon-text"><span class="material-icons">trending_up</span>Find Required Gross Salary</h3>
-            <button class="share-button" onclick="shareCalculator('net')" aria-label="Share calculator">
-                <span class="material-icons">share</span>
-            </button>
         </div>
         <label for="net">Desired Take-Home Salary (LKR)</label>
         <input type="number" id="net" placeholder="185,000" />
@@ -187,14 +188,15 @@
                 </div>
             </div>
         </div>
+        <div class="share-action" onclick="shareCalculator('net')">
+            <span class="material-icons">share</span>
+            <span>Share</span>
+        </div>
     </div>
 
     <div class="calculator">
         <div class="calculator-header">
             <h3 class="icon-text"><span class="material-icons">percent</span>Find Salary from Deductions</h3>
-            <button class="share-button" onclick="shareCalculator('deduction')" aria-label="Share calculator">
-                <span class="material-icons">share</span>
-            </button>
         </div>
         <label for="taxPercent">Tax Percentage (%)</label>
         <input type="number" id="taxPercent" placeholder="6 (Optional)" min="0" max="100" step="0.1" />
@@ -262,19 +264,23 @@
                 </div>
             </div>
         </div>
+        <div class="share-action" onclick="shareCalculator('deduction')">
+            <span class="material-icons">share</span>
+            <span>Share</span>
+        </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/utils.js"></script>
 <script src="js/tax-calculator.js"></script>
 <script src="js/cache.js"></script>
-<script src="js/chart-handler.js"></script>
-<script src="js/utils.js"></script>
 <script src="js/theme-handler.js"></script>
 <script src="js/calculator-basic.js"></script>
 <script src="js/calculator-reverse.js"></script>
 <script src="js/calculator-deduction.js"></script>
 <script src="js/share-handler.js"></script>
+<script src="js/chart-handler.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
