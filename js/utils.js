@@ -71,9 +71,9 @@ const updateCalculationResult = (components, resultDiv) => {
                 } else if (field === 'deductions') {
                     element.textContent = value.toFixed(1) + '%';
                 } else if (field.startsWith('annual')) {
-                    element.textContent = prefix + formatNumber(Math.round(value));
+                    element.textContent = prefix + formatNumber(Math.round(value).toFixed(decimals));
                 } else {
-                    element.textContent = prefix + formatNumber(parseFloat(value.toFixed(decimals)));
+                    element.textContent = prefix + formatNumber((value.toFixed(decimals)));
                 }
             } else {
                 element.textContent = value;

@@ -33,17 +33,48 @@ const memoize = (fn, maxCacheSize = 100) => {
     };
 };
 
-// Memoized tax calculation
+// Enhanced memoize function for responsive data
+const memoizeResponsive = (fn, maxCacheSize = 5) => {
+    const cache = new Map();
+    let lastWidth = window.innerWidth;
+
+    const wrapper = (...args) => {
+        const isMobile = window.innerWidth <= 768;
+
+        // Clear cache if viewport crossed mobile breakpoint
+        if ((lastWidth <= 768) !== isMobile) {
+            cache.clear();
+            lastWidth = window.innerWidth;
+        }
+
+        // Include viewport state in cache key
+        const key = JSON.stringify([...args, {isMobile}]);
+
+        if (cache.has(key)) {
+            return cache.get(key);
+        }
+
+        const result = fn(...args, isMobile);
+
+        if (cache.size >= maxCacheSize) {
+            const firstKey = cache.keys().next().value;
+            cache.delete(firstKey);
+        }
+        cache.set(key, result);
+
+        return result;
+    };
+
+    return wrapper;
+};
+
+// Memoized tax calculations
 const memoizedCalculateMonthlyTax = memoize(calculateMonthlyTax);
-
-// Memoized tax breakdown calculation
 const memoizedCalculateTaxBreakdown = memoize(calculateTaxBreakdown);
-
-// Memoized salary components calculation
 const memoizedCalculateSalaryComponents = memoize(calculateSalaryComponents);
 
-// Memoized chart data generation (smaller cache size since chart data is larger)
-const memoizedGenerateChartData = memoize(generateChartData, 5);
+// Memoized chart data generation with responsive handling
+const memoizedGenerateChartData = memoizeResponsive(window.generateChartDataBase);
 
 // Export memoized functions to window object for use in other files
 window.memoizedCalculateMonthlyTax = memoizedCalculateMonthlyTax;

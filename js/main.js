@@ -15,13 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initReverseCalculator();
     initDeductionCalculator();
 
-    // Initialize chart with memoized data generation if available
-    const chartData = window.memoizedGenerateChartData 
-        ? window.memoizedGenerateChartData()
-        : generateChartData();
-
+    // Initialize chart
     const ctx = document.getElementById('salaryChart')?.getContext('2d');
     if (ctx) {
+        const chartData = window.memoizedGenerateChartData();
         new Chart(ctx, createChartConfig(chartData));
     }
 });
