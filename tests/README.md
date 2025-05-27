@@ -8,6 +8,7 @@ This directory contains test files for the SalaryLK salary calculator applicatio
 - **calculator-basic.test.js**: Tests for the basic calculator (Calculate Take-Home Salary)
 - **calculator-reverse.test.js**: Tests for the reverse calculator (Find Required Gross Salary)
 - **calculator-deduction.test.js**: Tests for the deduction calculator (Find Salary from Deductions)
+- **chart-handler.test.js**: Tests for the chart functionality
 
 ## Running the Tests
 
@@ -22,6 +23,7 @@ node tax-calculator.test.js
 node calculator-basic.test.js
 node calculator-reverse.test.js
 node calculator-deduction.test.js
+node chart-handler.test.js
 ```
 
 ## Test Coverage
@@ -74,6 +76,16 @@ Tests for the deduction calculator functionality:
 - Prioritizing tax percentage when both inputs have values
 - Handling binary search failure
 - Verifying different calculation functions based on the isTaxOnly flag
+
+### Chart Handler Tests
+
+Tests for the chart functionality:
+
+- Color theme handling (light and dark themes)
+- Chart data generation with different parameters
+- Memoization of chart data
+- Chart configuration creation
+- Theme change handling
 
 ## Test Implementation Notes
 
