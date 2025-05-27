@@ -9,7 +9,9 @@ const TAX_BRACKETS = [
 ];
 
 // Export tax brackets for use in other files
-window.TAX_BRACKETS = TAX_BRACKETS;
+if (typeof window !== 'undefined') {
+    window.TAX_BRACKETS = TAX_BRACKETS;
+}
 
 const EPF_RATE = 0.08;
 
@@ -40,7 +42,7 @@ const calculateTaxBreakdown = (annualIncome) => {
     let previousLimit = 0;
 
     for (const {upTo, rate} of TAX_BRACKETS) {
-        const limit = upTo === null ? annualIncome : upTo;
+        const limit = upTo === null ? Math.max(annualIncome, previousLimit) : upTo;
         const taxableInBracket = Math.min(Math.max(annualIncome - previousLimit, 0), limit - previousLimit);
         const taxForBracket = taxableInBracket * (rate / 100);
 
@@ -67,11 +69,11 @@ const calculateSalaryComponents = (basicSalary = 0, allowance = 0) => {
     const annualGross = grossMonthly * 12;
 
     // Use memoized versions if available
-    const tax = window.memoizedCalculateMonthlyTax 
+    const tax = (typeof window !== 'undefined' && window.memoizedCalculateMonthlyTax) 
         ? window.memoizedCalculateMonthlyTax(annualGross)
         : calculateMonthlyTax(annualGross);
 
-    const taxBreakdown = window.memoizedCalculateTaxBreakdown
+    const taxBreakdown = (typeof window !== 'undefined' && window.memoizedCalculateTaxBreakdown)
         ? window.memoizedCalculateTaxBreakdown(annualGross)
         : calculateTaxBreakdown(annualGross);
     const net = grossMonthly - tax - epf;
@@ -90,3 +92,14 @@ const calculateSalaryComponents = (basicSalary = 0, allowance = 0) => {
         taxBreakdown
     };
 };
+
+// Make it work in both browser and Node.js
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { 
+        TAX_BRACKETS,
+        EPF_RATE,
+        calculateMonthlyTax, 
+        calculateTaxBreakdown, 
+        calculateSalaryComponents 
+    };
+}

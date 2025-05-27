@@ -93,106 +93,17 @@ const runTests = (suite) => {
     });
 };
 
-// Import the tax calculation functions
-// In a browser environment, these would be on the window object
-// For testing, we'll define them directly
-const TAX_BRACKETS = [
-    {upTo: 1800000, rate: 0},    // 0% up to 1.8M
-    {upTo: 2800000, rate: 6},    // 6% up to 2.8M
-    {upTo: 3300000, rate: 18},   // 18% up to 3.3M
-    {upTo: 3800000, rate: 24},   // 24% up to 3.8M
-    {upTo: 4300000, rate: 30},   // 30% up to 4.3M
-    {upTo: null, rate: 36},      // 36% above 4.3M
-];
+// Import the tax calculation functions from the actual application code
+const { 
+    TAX_BRACKETS, 
+    EPF_RATE, 
+    calculateMonthlyTax, 
+    calculateTaxBreakdown, 
+    calculateSalaryComponents 
+} = require('../js/tax-calculator.js');
 
-const EPF_RATE = 0.08;
-
-// Core calculation functions from tax-calculator.js
-const calculateMonthlyTax = (annualIncome) => {
-    if (annualIncome <= 0) return 0;
-
-    let tax = 0;
-    let previousLimit = 0;
-
-    for (const {upTo, rate} of TAX_BRACKETS) {
-        if (upTo === null || annualIncome <= upTo) {
-            tax += (annualIncome - previousLimit) * (rate / 100);
-            break;
-        }
-        tax += (upTo - previousLimit) * (rate / 100);
-        previousLimit = upTo;
-    }
-
-    return tax / 12; // Convert annual tax to monthly
-};
-
-const calculateTaxBreakdown = (annualIncome) => {
-    if (annualIncome <= 0) return Array(TAX_BRACKETS.length).fill(0);
-
-    const breakdown = [];
-    let previousLimit = 0;
-
-    for (const {upTo, rate} of TAX_BRACKETS) {
-        const limit = upTo === null ? annualIncome : upTo;
-        const taxableInBracket = Math.min(Math.max(annualIncome - previousLimit, 0), limit - previousLimit);
-        const taxForBracket = taxableInBracket * (rate / 100);
-
-        breakdown.push(taxForBracket / 12); // Convert to monthly
-        previousLimit = limit;
-    }
-
-    return breakdown;
-};
-
-const calculateSalaryComponents = (basicSalary = 0, allowance = 0) => {
-    if (basicSalary < 0) basicSalary = 0;
-    if (allowance < 0) allowance = 0;
-
-    const grossMonthly = basicSalary + allowance;
-    if (grossMonthly <= 0) {
-        return {
-            basic: 0, allowance: 0, gross: 0, tax: 0, epf: 0, net: 0,
-            taxPercentage: 0, deductionPercentage: 0, taxBreakdown: Array(TAX_BRACKETS.length).fill(0)
-        };
-    }
-
-    const epf = basicSalary * EPF_RATE;
-    const annualGross = grossMonthly * 12;
-
-    const tax = calculateMonthlyTax(annualGross);
-    const taxBreakdown = calculateTaxBreakdown(annualGross);
-    const net = grossMonthly - tax - epf;
-    const taxPercentage = grossMonthly > 0 ? (tax / grossMonthly) * 100 : 0;
-    const deductionPercentage = grossMonthly > 0 ? ((tax + epf) / grossMonthly) * 100 : 0;
-
-    return {
-        basic: basicSalary,
-        allowance,
-        gross: grossMonthly,
-        tax,
-        epf,
-        net,
-        taxPercentage,
-        deductionPercentage,
-        taxBreakdown
-    };
-};
-
-// Binary search utility for finding values
-const binarySearch = (targetFn, targetValue, low, high, tolerance = 0.01, maxIterations = 100) => {
-    for (let i = 0; i < maxIterations; i++) {
-        const guess = (low + high) / 2;
-        const current = targetFn(guess);
-
-        if (Math.abs(current - targetValue) < tolerance) {
-            return guess;
-        }
-
-        if (current < targetValue) low = guess;
-        else high = guess;
-    }
-    return null;
-};
+// Import the binary search utility from cache.js
+const { binarySearch } = require('../js/cache.js');
 
 // Mock DOM elements and functions for testing
 class MockElement {

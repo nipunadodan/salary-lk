@@ -32,6 +32,43 @@ const generateChartDataBase = (start = 100000, end = 500000, step = 10000, isMob
 // Make base function available for memoization
 window.generateChartDataBase = generateChartDataBase;
 
+// Create memoized chart data function
+window.memoizedGenerateChartData = (() => {
+    const cache = new Map();
+    let lastWidth = window.innerWidth;
+
+    return (...args) => {
+        if (!window.generateChartDataBase) return [];
+
+        const isMobile = window.innerWidth <= 768;
+
+        // Clear cache if viewport crossed mobile breakpoint
+        if ((lastWidth <= 768) !== isMobile) {
+            cache.clear();
+            lastWidth = window.innerWidth;
+        }
+
+        // Create cache key from args and viewport state
+        const key = JSON.stringify([...args, {isMobile}]);
+
+        if (cache.has(key)) {
+            return cache.get(key);
+        }
+
+        // Generate new data
+        const result = window.generateChartDataBase(...args, isMobile);
+
+        // Manage cache size (keep only 5 entries)
+        if (cache.size >= 5) {
+            const firstKey = cache.keys().next().value;
+            cache.delete(firstKey);
+        }
+        cache.set(key, result);
+
+        return result;
+    };
+})();
+
 const createChartConfig = (data) => {
     const colors = getChartColors();
     return {
