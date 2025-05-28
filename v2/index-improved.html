@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sri Lanka Salary Calculator</title>
+    <meta name="description"
+          content="Calculate your take-home salary in Sri Lanka after tax and EPF deductions. Supports basic, reverse, and tax percentage calculations.">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../favicon.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="logo">
+            <img src="../salarylk_favicon.svg" alt="SalaryLK Logo" class="logo-icon">
+            <h1>Sri Lanka Salary Calculator</h1>
+        </div>
+        <button class="theme-toggle-button" aria-label="Toggle dark mode">
+            <span class="material-icons theme-icon">dark_mode</span>
+        </button>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-button active" data-tab="basic-calculator">Basic</button>
+        <button class="tab-button" data-tab="reverse-calculator">Reverse</button>
+        <button class="tab-button" data-tab="deduction-calculator">By Deduction</button>
+    </div>
+
+    <div class="tab-content active" id="basic-calculator">
+        <div class="calculator-container">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="basic">Basic Salary (LKR)</label>
+                    <input type="number" id="basic" placeholder="Enter basic salary" min="0" step="1000">
+                </div>
+                <div class="input-group">
+                    <label for="allowance">Allowances (LKR)</label>
+                    <input type="number" id="allowance" placeholder="Enter allowances" min="0" step="1000">
+                </div>
+            </div>
+            <div class="results" id="results">
+                <div class="result-line">
+                    <span>Basic Salary:</span>
+                    <span class="monospace value" data-field="basic">-</span>
+                </div>
+                <div class="result-line">
+                    <span>Allowances:</span>
+                    <span class="monospace value" data-field="allowance">-</span>
+                </div>
+                <div class="result-line">
+                    <span>Tax (<span data-field="taxPercent">-</span>%):</span>
+                    <span class="monospace value" data-field="tax">-</span>
+                    <span class="expand-icon" onclick="toggleTaxBreakdown(this)">
+                        <span class="material-icons">expand_more</span>
+                    </span>
+                </div>
+                <div class="tax-breakdown" style="display: none;">
+                    <div class="result-line">
+                        <span>0% up to 1.8M:</span>
+                        <span class="monospace value" data-field="tax0">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>6% up to 2.8M:</span>
+                        <span class="monospace value" data-field="tax6">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>18% up to 3.3M:</span>
+                        <span class="monospace value" data-field="tax18">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>24% up to 3.8M:</span>
+                        <span class="monospace value" data-field="tax24">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>30% up to 4.3M:</span>
+                        <span class="monospace value" data-field="tax30">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>36% above 4.3M:</span>
+                        <span class="monospace value" data-field="tax36">-</span>
+                    </div>
+                </div>
+                <div class="result-line">
+                    <span>EPF (8%):</span>
+                    <span class="monospace value" data-field="epf">-</span>
+                </div>
+                <div class="result-line">
+                    <span>Total Deductions:</span>
+                    <span class="monospace value" data-field="deductions">-%</span>
+                </div>
+                <div class="result-line prominent-result">
+                    <span>Gross Salary:</span>
+                    <span class="monospace value" data-field="gross">-</span>
+                </div>
+                <div class="result-line">
+                    <span>Take-Home:</span>
+                    <span class="monospace value" data-field="net">-</span>
+                </div>
+                <div class="annual-breakdown">
+                    <strong>Annual Income</strong>
+                    <div class="result-line">
+                        <span>Gross Annual:</span>
+                        <span class="monospace value" data-field="annualGross">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>Net Annual:</span>
+                        <span class="monospace value" data-field="annualNet">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="share-action" onclick="shareCalculator('basic')">
+                <span class="material-icons">share</span>
+                <span>Share</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="reverse-calculator">
+        <div class="calculator-container">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="net">Desired Take-Home (LKR)</label>
+                    <input type="number" id="net" placeholder="Enter desired net salary" min="0" step="1000">
+                </div>
+                <div class="input-group">
+                    <label for="reverseAllowance">Allowances (LKR)</label>
+                    <input type="number" id="reverseAllowance" placeholder="Enter allowances" min="0" step="1000">
+                </div>
+            </div>
+            <div class="results" id="reverseResults">
+                <div class="result-line">
+                    <span>Basic Salary:</span>
+                    <span class="monospace value" data-field="basic">-</span>
+                </div>
+                <div class="result-line">
+                    <span>Allowances:</span>
+                    <span class="monospace value" data-field="allowance">-</span>
+                </div>
+                <div class="result-line">
+                    <span>Tax (<span data-field="taxPercent">-</span>%):</span>
+                    <span class="monospace value" data-field="tax">-</span>
+                    <span class="expand-icon" onclick="toggleTaxBreakdown(this)">
+                        <span class="material-icons">expand_more</span>
+                    </span>
+                </div>
+                <div class="tax-breakdown" style="display: none;">
+                    <div class="result-line">
+                        <span>0% up to 1.8M:</span>
+                        <span class="monospace value" data-field="tax0">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>6% up to 2.8M:</span>
+                        <span class="monospace value" data-field="tax6">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>18% up to 3.3M:</span>
+                        <span class="monospace value" data-field="tax18">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>24% up to 3.8M:</span>
+                        <span class="monospace value" data-field="tax24">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>30% up to 4.3M:</span>
+                        <span class="monospace value" data-field="tax30">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>36% above 4.3M:</span>
+                        <span class="monospace value" data-field="tax36">-</span>
+                    </div>
+                </div>
+                <div class="result-line">
+                    <span>EPF (8%):</span>
+                    <span class="monospace value" data-field="epf">-</span>
+                </div>
+                <div class="result-line">
+                    <span>Total Deductions:</span>
+                    <span class="monospace value" data-field="deductions">-%</span>
+                </div>
+                <div class="result-line prominent-result">
+                    <span>Gross Salary:</span>
+                    <span class="monospace value" data-field="gross">-</span>
+                </div>
+                <div class="result-line">
+                    <span>Take-Home:</span>
+                    <span class="monospace value" data-field="net">-</span>
+                </div>
+                <div class="annual-breakdown">
+                    <strong>Annual Income</strong>
+                    <div class="result-line">
+                        <span>Gross Annual:</span>
+                        <span class="monospace value" data-field="annualGross">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>Net Annual:</span>
+                        <span class="monospace value" data-field="annualNet">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="share-action" onclick="shareCalculator('net')">
+                <span class="material-icons">share</span>
+                <span>Share</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" id="deduction-calculator">
+        <div class="calculator-container">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="taxPercent">Tax Percentage (%)</label>
+                    <input type="number" id="taxPercent" placeholder="Enter desired tax %" min="0" max="36" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label for="totalDeduction">Total Deduction (%)</label>
+                    <input type="number" id="totalDeduction" placeholder="Enter desired deduction %" min="0" max="40"
+                           step="0.1">
+                </div>
+            </div>
+            <div class="results" id="deductionResults">
+                <div class="result-line">
+                    <span>Basic Salary:</span>
+                    <span class="monospace value" data-field="basic">-</span>
+                </div>
+                <div class="result-line">
+                    <span>Allowances:</span>
+                    <span class="monospace value" data-field="allowance">-</span>
+                </div>
+                <div class="result-line">
+                    <span>Tax (<span data-field="taxPercent">-</span>%):</span>
+                    <span class="monospace value" data-field="tax">-</span>
+                    <span class="expand-icon" onclick="toggleTaxBreakdown(this)">
+                        <span class="material-icons">expand_more</span>
+                    </span>
+                </div>
+                <div class="tax-breakdown" style="display: none;">
+                    <div class="result-line">
+                        <span>0% up to 1.8M:</span>
+                        <span class="monospace value" data-field="tax0">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>6% up to 2.8M:</span>
+                        <span class="monospace value" data-field="tax6">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>18% up to 3.3M:</span>
+                        <span class="monospace value" data-field="tax18">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>24% up to 3.8M:</span>
+                        <span class="monospace value" data-field="tax24">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>30% up to 4.3M:</span>
+                        <span class="monospace value" data-field="tax30">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>36% above 4.3M:</span>
+                        <span class="monospace value" data-field="tax36">-</span>
+                    </div>
+                </div>
+                <div class="result-line">
+                    <span>EPF (8%):</span>
+                    <span class="monospace value" data-field="epf">-</span>
+                </div>
+                <div class="result-line">
+                    <span>Total Deductions:</span>
+                    <span class="monospace value" data-field="deductions">-%</span>
+                </div>
+                <div class="result-line prominent-result">
+                    <span>Gross Salary:</span>
+                    <span class="monospace value" data-field="gross">-</span>
+                </div>
+                <div class="result-line">
+                    <span>Take-Home:</span>
+                    <span class="monospace value" data-field="net">-</span>
+                </div>
+                <div class="annual-breakdown">
+                    <strong>Annual Income</strong>
+                    <div class="result-line">
+                        <span>Gross Annual:</span>
+                        <span class="monospace value" data-field="annualGross">-</span>
+                    </div>
+                    <div class="result-line">
+                        <span>Net Annual:</span>
+                        <span class="monospace value" data-field="annualNet">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="share-action" onclick="shareCalculator('deduction')">
+                <span class="material-icons">share</span>
+                <span>Share</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <h2>Salary vs. Deductions</h2>
+        <canvas id="salaryChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/tax-calculator.js"></script>
+<script src="js/cache-improved.js"></script>
+<script src="js/theme-handler.js"></script>
+<script src="js/calculator.js"></script>
+<script src="js/share-handler.js"></script>
+<script src="js/chart-handler-improved.js"></script>
+<script src="js/main-improved.js"></script>
+</body>
+</html>
